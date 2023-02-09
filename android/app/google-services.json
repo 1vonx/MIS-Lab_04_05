@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "553544414143",
+    "project_id": "exam-management-application",
+    "storage_bucket": "exam-management-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553544414143:android:11739845fb03410c60270a",
+        "android_client_info": {
+          "package_name": "com.lab4and5.mis.lab_04_05"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553544414143-pj5g4f1kdjb7rsjcbvlflo4comfer565.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbfeXGuKWpGeDwwew_yAKPbXyphIwHJPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553544414143-pj5g4f1kdjb7rsjcbvlflo4comfer565.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
