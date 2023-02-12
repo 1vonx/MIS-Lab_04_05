@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'package:lab_04_05/model/exam_list_item.dart';
@@ -21,6 +22,10 @@ class _NewItemState extends State<NewItem> {
   final _startDateController = TextEditingController();
   final _endDateController = TextEditingController();
 
+  GoogleMapController? _controller;
+  List<Marker> markers = [];
+  int id = 1;
+
   Future addItemToDB({required ExamItem item}) async {
     final docItem =
         FirebaseFirestore.instance.collection("examEvents").doc(item.id);
@@ -28,13 +33,19 @@ class _NewItemState extends State<NewItem> {
     await docItem.set(json);
   }
 
+  late LatLng _latLng;
+
   void _submitData() {
-    if (_startDateController.text.isEmpty || _endDateController.text.isEmpty) {
+    if (_startDateController.text.isEmpty ||
+        _endDateController.text.isEmpty ||
+        _latLng == null) {
       return;
     }
     final enteredName = _nameController.text;
     final enteredStartDateTime = DateTime.parse(_startDateController.text);
     final enteredEndDateTime = DateTime.parse(_endDateController.text);
+    final lat = _latLng.latitude;
+    final lon = _latLng.longitude;
 
     if (enteredName.isEmpty) {
       return;
@@ -46,7 +57,9 @@ class _NewItemState extends State<NewItem> {
         name: enteredName,
         color: Colors.cyan,
         startTime: enteredStartDateTime,
-        endTime: enteredEndDateTime);
+        endTime: enteredEndDateTime,
+        latitude: lat,
+        longitude: lon);
 
     widget.addItem(newItem);
     addItemToDB(item: newItem);
@@ -57,14 +70,17 @@ class _NewItemState extends State<NewItem> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Column(
+      child: ListView(
+        scrollDirection: Axis.vertical,
         children: [
-          const Text(
-            "Add a new exam event:",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Colors.cyan,
+          const Center(
+            child: Text(
+              "Add a new exam event:",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.cyan,
+              ),
             ),
           ),
           TextField(
@@ -92,7 +108,7 @@ class _NewItemState extends State<NewItem> {
               if (date != null) {
                 final time = await showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: 12, minute: 0));
+                    initialTime: const TimeOfDay(hour: 12, minute: 0));
                 return DateTimeField.combine(date, time);
               } else {
                 return currentValue;
@@ -117,13 +133,47 @@ class _NewItemState extends State<NewItem> {
               if (date != null) {
                 final time = await showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: 12, minute: 0));
+                    initialTime: const TimeOfDay(hour: 12, minute: 0));
                 return DateTimeField.combine(date, time);
               } else {
                 return currentValue;
               }
             },
             onFieldSubmitted: (_) => _submitData(),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            child: GoogleMap(
+              mapType: MapType.normal,
+              onMapCreated: (GoogleMapController controller) {
+                _controller = controller;
+              },
+              initialCameraPosition: const CameraPosition(
+                  target: LatLng(42.0041222, 21.4073592), zoom: 14),
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              onTap: (LatLng latLng) {
+                Marker marker = Marker(
+                  markerId: MarkerId('$id'),
+                  position: LatLng(latLng.latitude, latLng.longitude),
+                  infoWindow: const InfoWindow(title: 'Where does the exam take place?'),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueRed),
+                );
+                markers.add(marker);
+                _latLng = latLng;
+                id = id + 1;
+                setState(() {});
+              },
+              markers: markers.map((e) => e).toSet(),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
           ),
           ElevatedButton(
             child: const Text(

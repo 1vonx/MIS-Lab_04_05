@@ -10,6 +10,8 @@ class ExamItem {
   final DateTime endTime;
   final String subject;
   final Color color;
+  final double longitude;
+  final double latitude;
 
   ExamItem(
       {this.id = '',
@@ -18,7 +20,9 @@ class ExamItem {
       this.subject = '',
       required this.startTime,
       required this.endTime,
-      this.color = Colors.cyan});
+      this.color = Colors.cyan,
+      required this.longitude,
+      required this.latitude});
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -26,6 +30,8 @@ class ExamItem {
         'name': name,
         'startTime': startTime,
         'endTime': endTime,
+        'longitude': longitude,
+        'latitude': latitude
       };
 
   static ExamItem fromJson(Map<String, dynamic> json) => ExamItem(
@@ -33,5 +39,7 @@ class ExamItem {
       userId: json['userId'],
       name: json['name'],
       startTime: (json['startTime'] as Timestamp).toDate(),
-      endTime: (json['endTime'] as Timestamp).toDate());
+      endTime: (json['endTime'] as Timestamp).toDate(),
+      longitude: json['longitude'],
+      latitude: json['latitude']);
 }

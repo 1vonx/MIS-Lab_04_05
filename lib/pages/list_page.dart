@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lab_04_05/api/notification/notification_api.dart';
 import 'package:lab_04_05/data/menu_items.dart';
 import 'package:lab_04_05/model/menu_item.dart';
+import 'package:lab_04_05/pages/map_page.dart';
 import '../model/exam_list_item.dart';
+import '../service/notification/notification_api.dart';
 import '../widgets/date_time_text.dart';
 import '../widgets/new_item.dart';
 import 'calendar_page.dart';
@@ -81,6 +82,10 @@ class _ListPageState extends State<ListPage> {
                   height: 20,
                 ),
                 ...MenuItems.itemsSecond.map(buildItem).toList(),
+                const PopupMenuDivider(
+                  height: 20,
+                ),
+                ...MenuItems.itemsThird.map(buildItem).toList(),
               ],
               color: Colors.white,
             )
@@ -147,18 +152,17 @@ class _ListPageState extends State<ListPage> {
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: const Icon(
-                                    Icons.notifications_active_outlined,
-                                    color: Colors.cyan,
-                                  ),
-                                  onPressed:() async {
-                                    await NotificationApi.showNotification(
-                                      title: 'Exam Management App',
-                                      body: 'You have an upcoming exam!',
-                                      payload: _listItems[index].id,
-                                    );
-                                  }
-                                ),
+                                    icon: const Icon(
+                                      Icons.notifications_active_outlined,
+                                      color: Colors.cyan,
+                                    ),
+                                    onPressed: () async {
+                                      await NotificationApi.showNotification(
+                                        title: 'Exam Management App',
+                                        body: 'You have an upcoming exam!',
+                                        payload: _listItems[index].id,
+                                      );
+                                    }),
                                 IconButton(
                                   icon: const Icon(
                                     Icons.delete,
@@ -213,7 +217,12 @@ class _ListPageState extends State<ListPage> {
     switch (item) {
       case MenuItems.calendarItem:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => CalendarPage(events: _listItems.toList()),
+          builder: (context) => CalendarPage(events: _listItems),
+        ));
+        break;
+      case MenuItems.mapItem:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MapPage(events: _listItems),
         ));
         break;
       case MenuItems.logoutItem:
@@ -223,7 +232,7 @@ class _ListPageState extends State<ListPage> {
   }
 
   void listenNotifications() =>
-    NotificationApi.onNotifications.stream.listen(onClickedNotification);
+      NotificationApi.onNotifications.stream.listen(onClickedNotification);
 
   Future<void> onClickedNotification(String? payload) async =>
       await Navigator.of(context).push(MaterialPageRoute(

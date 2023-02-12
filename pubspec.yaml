@@ -45,6 +45,11 @@ dependencies:
   flutter_cupertino_date_picker: ^1.0.0
   flutter_local_notifications: ^13.0.0
   rxdart:
+  flutter_native_timezone: ^2.0.0
+  google_maps_flutter:
+  geolocator:
+  location:
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

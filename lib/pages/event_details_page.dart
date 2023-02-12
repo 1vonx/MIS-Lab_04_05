@@ -51,7 +51,7 @@ class EventDetailsPage extends StatelessWidget {
                   elevation: 50,
                   child: SizedBox(
                     width: 300,
-                    height: 300,
+                    height: 400,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
@@ -94,7 +94,7 @@ class EventDetailsPage extends StatelessWidget {
                           Card(
                             color: Colors.cyan,
                             child: SizedBox(
-                              width: 250,
+                              width: 260,
                               height: 50,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
