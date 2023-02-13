@@ -156,7 +156,7 @@ class _NewItemState extends State<NewItem> {
                   target: LatLng(42.0041222, 21.4073592), zoom: 14),
               myLocationEnabled: true,
               myLocationButtonEnabled: true,
-              onTap: (LatLng latLng) {
+              onTap: (LatLng latLng) async {
                 Marker marker = Marker(
                   markerId: MarkerId('$id'),
                   position: LatLng(latLng.latitude, latLng.longitude),

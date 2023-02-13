@@ -39,7 +39,7 @@ dependencies:
   nanoid: ^1.0.0
   cloud_firestore: ^4.3.1
   firebase_auth: ^4.2.2
-  intl: ^0.17.0-nullsafety.2
+  intl: ^0.18.0
   datetime_picker_formfield_new: ^2.0.0
   syncfusion_flutter_calendar: ^20.4.48
   flutter_cupertino_date_picker: ^1.0.0
@@ -50,6 +50,8 @@ dependencies:
   geolocator:
   location:
   permission_handler: ^10.2.0
+  flutter_polyline_points:
+  flutter_svg:
 
 dev_dependencies:
   flutter_test:

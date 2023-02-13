@@ -12,7 +12,6 @@ class MapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         // The title text which will be shown on the action bar

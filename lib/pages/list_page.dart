@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:lab_04_05/data/menu_items.dart';
 import 'package:lab_04_05/model/menu_item.dart';
 import 'package:lab_04_05/pages/map_page.dart';
+import 'package:lab_04_05/pages/route_page.dart';
 import '../model/exam_list_item.dart';
-import '../service/notification/notification_api.dart';
+import '../service/notification/notification_service.dart';
 import '../widgets/date_time_text.dart';
 import '../widgets/new_item.dart';
 import 'calendar_page.dart';
@@ -163,6 +164,17 @@ class _ListPageState extends State<ListPage> {
                                         payload: _listItems[index].id,
                                       );
                                     }),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.pin_drop_outlined,
+                                    color: Colors.cyan,
+                                  ),
+                                  onPressed: () => Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                        RoutePage(),
+                                  )),
+                                ),
                                 IconButton(
                                   icon: const Icon(
                                     Icons.delete,
