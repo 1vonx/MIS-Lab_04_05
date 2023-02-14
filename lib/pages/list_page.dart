@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lab_04_05/data/menu_items.dart';
 import 'package:lab_04_05/model/menu_item.dart';
 import 'package:lab_04_05/pages/map_page.dart';
 import 'package:lab_04_05/pages/route_page.dart';
+import 'package:location/location.dart';
 import '../model/exam_list_item.dart';
 import '../service/notification/notification_service.dart';
 import '../widgets/date_time_text.dart';
@@ -24,6 +27,40 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   final user = FirebaseAuth.instance.currentUser!;
   List<ExamItem> _listItems = [];
+
+  List<LatLng> polylineCoords = [];
+  LocationData? currentLocation;
+
+  void getCurrentLocation() {
+    Location location = Location();
+
+    location.getLocation().then((location) {
+      currentLocation = location;
+    });
+
+  }
+
+  void getPolyPoints(ExamItem exam) async {
+    polylineCoords.clear();
+    PolylinePoints polylinePoints = PolylinePoints();
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        "AIzaSyCW4TGHqV6Jf-YJZYwGQ9o715FFnqVp6xQ",
+        PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        PointLatLng(exam.latitude, exam.longitude));
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) =>
+          polylineCoords.add(LatLng(point.latitude, point.longitude)));
+      setState(() {});
+
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => RoutePage(exam.name,
+            currentLocation!.latitude!, currentLocation!.longitude!,
+            exam.latitude, exam.longitude, polylineCoords),
+      ));
+    }
+  }
 
   Future<List<ExamItem>> readItems() => FirebaseFirestore.instance
       .collection("examEvents")
@@ -62,6 +99,7 @@ class _ListPageState extends State<ListPage> {
 
     NotificationApi.init();
     listenNotifications();
+    getCurrentLocation();
   }
 
   @override
@@ -169,11 +207,8 @@ class _ListPageState extends State<ListPage> {
                                     Icons.pin_drop_outlined,
                                     color: Colors.cyan,
                                   ),
-                                  onPressed: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                        RoutePage(),
-                                  )),
+                                  onPressed: () =>
+                                      getPolyPoints(_listItems[index]),
                                 ),
                                 IconButton(
                                   icon: const Icon(

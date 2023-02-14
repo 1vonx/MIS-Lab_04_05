@@ -24,10 +24,7 @@ class MapPage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 500,
-        child: GoogleMap(
+      body: GoogleMap(
           mapType: MapType.normal,
           onMapCreated: (GoogleMapController controller) {
             controller = _controller!;
@@ -40,7 +37,6 @@ class MapPage extends StatelessWidget {
           myLocationButtonEnabled: true,
           markers: addMarkers(events),
         ),
-      ),
     );
   }
 
